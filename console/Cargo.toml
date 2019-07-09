@@ -1,0 +1,14 @@
+[package]
+name = "console"
+version = "0.1.0"
+authors = ["Stewart Mackenzie <sjm@fractalide.com"]
+edition = "2018"
+
+[dependencies]
+log = "0.4"
+web_logger = "0.1"
+strum = "0.13"
+strum_macros = "0.13"
+yew = { git = "https://github.com/DenisKolodin/yew", rev = "a33a89f0f185a157b4440ad82eef66daf5f98896" }
+faucet = { path = "../faucet" }
+jolt = { path = "../jolt" }
