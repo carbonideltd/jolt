@@ -8,3 +8,6 @@ edition = "2018"
 serde = { version = "1.0", features = ["derive"] }
 cryptoxide = "0.1.1"
 base64 = "0.10.1"
+rpassword = "3.0.2"
+chain-addr = { path = "../chain-libs/chain-addr" }
+chain-crypto = { path = "../chain-libs/chain-crypto" }
