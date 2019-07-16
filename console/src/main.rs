@@ -7,12 +7,14 @@ use yew::{html, App, Component, ComponentLink, Html, Renderable, ShouldRender};
 use yew::components::Select;
 use faucet::Model as Faucet;
 use jolt::Model as Jolt;
+use identity::Model as Identity;
 
 
 #[derive(Clone, Debug, Display, EnumString, EnumIter, PartialEq)]
 enum Scene {
     Faucet,
     Jolt,
+    Identity,
 }
 
 struct Model {
@@ -29,7 +31,7 @@ impl Component for Model {
 
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
         Self {
-            scene: Some(Scene::Faucet)
+            scene: Some(Scene::Identity)
             // scene: None
         }
     }
@@ -68,6 +70,7 @@ impl Model {
             match scene {
                 Scene::Faucet => html! { <Faucet /> },
                 Scene::Jolt => html! { <Jolt /> },
+                Scene::Identity => html! { <Identity /> },
             }
         } else {
             html! {
