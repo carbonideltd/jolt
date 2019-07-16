@@ -5,14 +5,12 @@ extern crate chain_addr;
 extern crate rand_chacha;
 extern crate getrandom;
 extern crate cryptoxide;
-#[macro_use]
 extern crate stdweb;
 extern crate base64;
 
 mod address;
 
 use yew::{html, Component, ComponentLink, Html, Renderable, ShouldRender};
-use yew::services::ConsoleService;
 use chain_crypto::{Ed25519, PublicKey, SecretKey};
 use chain_crypto::bech32::Bech32;
 use rand_chacha::ChaChaRng;
@@ -28,7 +26,6 @@ use cryptoxide::{chacha20poly1305::ChaCha20Poly1305, hmac::Hmac, pbkdf2::pbkdf2,
 use base64::{encode, decode};
 
 pub struct Model {
-    console: ConsoleService,
     password: String,
     sk: String,
     pk: String,
@@ -50,7 +47,6 @@ impl Component for Model {
 
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
         Model {
-            console: ConsoleService::new(),
             password: "".into(),
             sk: "".into(),
             pk: "".into(),
@@ -84,14 +80,18 @@ impl Renderable<Model> for Model {
                     type="password"
                     value=&self.password
                     oninput=|e| Msg::GotPassword(e.value)
-                    placeholder="Password">
+                    placeholder="Select a strong password">
                 </input>
                 <button onclick=|_| Msg::Generate>{ "Generate" }</button>
-                <p>{ &self.address }</p>
                 {
                     if self.completed == true {
                         html! {
-                            <a download="jolt.key" href=self.download_href.clone()>{"download your jolt keys"}</a>
+                            <div>
+                                <p></p>
+                                <p>{ "Your key pair is now generated, please download the encrypted file to a secure location." }</p>
+                                <p> { "Back up the file somewhere safe and ensure you do not lose the password." }</p>
+                                <a download="jolt.key" href=self.download_href.clone()>{"download your jolt keys"}</a>
+                            </div>
                         }
                     } else {
                         html! { <a type="hidden" />  }
@@ -114,14 +114,10 @@ impl Model {
         let sk: SecretKey<Ed25519> = SecretKey::generate(&mut rng);
         self.sk = sk.to_bech32_str();
         let pk: PublicKey<Ed25519> = sk.to_public();
-        js! { console.log( @{ format!("sk length: {:?}", self.sk.len()) })};
         self.pk = pk.clone().to_bech32_str();
-        js! { console.log( @{ format!("pk length: {:?}", self.pk.len()) })};
         let address = chain_addr::Address(DISCRIMINATION, chain_addr::Kind::Single(pk.clone()));
         self.address = address::Address::from(address).to_string();
-        js! { console.log( @{ format!("address length: {:?}", self.address.len()) })};
-        let crypto_material = format!("{}{}{}",sk.to_bech32_str(), pk.clone().to_bech32_str(), self.address);
-        // let crypto_material = format!("{}\n{}",sk.to_bech32_str(), pk.clone().to_bech32_str());
+        let crypto_material = format!("{}{}",sk.to_bech32_str(), pk.clone().to_bech32_str());
         let digest = encrypt(self.password.clone(), &crypto_material);
         self.encrypted = digest.clone();
         let cleartext = decrypt(self.password.clone(), digest.clone());
@@ -144,7 +140,7 @@ const SALT_SIZE: usize = 16;
 const NONCE_SIZE: usize = 12;
 const TAG_SIZE: usize = 16;
 const KEY_SIZE: usize = 32;
-const CLEARTEXT_SIZE: usize = 201;
+const CLEARTEXT_SIZE: usize = 138;
 const CIPHERTEXT_SIZE: usize = CLEARTEXT_SIZE;
 const DIGEST_SIZE: usize = SALT_SIZE + NONCE_SIZE + TAG_SIZE + CIPHERTEXT_SIZE;
 
@@ -192,7 +188,6 @@ fn encrypt(password: String, cleartext: &String) -> String {
     digest.extend_from_slice(&nonce);
     digest.append(&mut ciphertext);
     digest.extend_from_slice(&tag);
-    // js! { console.log( @{ format!("encrypted: {:?}", digest) })};
     encode(&digest)
 }
 
@@ -210,7 +205,6 @@ fn decrypt( password: String, digest : String) -> Option<String> {
 
     let mut decipher = ChaCha20Poly1305::new(&key[..], &nonce[..], &[]);
     if decipher.decrypt(&digest[0..len], &mut cleartext[..], &digest[len..]) {
-        // js! { console.log( @{ format!("decrypted: {:?}", cleartext) })};
         Some(String::from_utf8(cleartext).unwrap())
     } else {
         None

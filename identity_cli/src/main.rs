@@ -40,7 +40,6 @@ fn main() -> std::io::Result<()> {
     println!("jolt key decrypter");
     println!("key path:  {}", args[1]);
     let password = prompt_password_stdout("enter your jolt password: ").unwrap();
-    // let password = read_password().unwrap();
     let mut file = File::open(args[1].clone()).unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
@@ -81,8 +80,7 @@ fn decrypt( password: String, digest : String) -> std::io::Result<()>{
         cleartext.read_exact(&mut sk[..]).unwrap();
         cleartext.read_exact(&mut pk[..]).unwrap();
         let pk = String::from_utf8(pk.to_vec()).unwrap();
-        println!("secret key: < not displayed for security reasons >\npublic key: {}"
-        , pk);
+        println!("secret key: < not displayed for security reasons >\npublic key: {}", pk);
         let pk = PublicKey::<Ed25519>::try_from_bech32_str(&pk).unwrap();
         let addr = Address(chain_addr::Address(DISCRIMINATION, chain_addr::Kind::Single(pk)));
         println!("address:    {}", addr);
