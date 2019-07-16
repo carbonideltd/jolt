@@ -6,6 +6,7 @@ edition = "2018"
 
 [dependencies]
 stdweb = "0.4.2"
+jolt_crypto = { path = "../jolt-crypto" }
 chain-crypto = { path = "../chain-libs/chain-crypto" }
 chain-addr = { path = "../chain-libs/chain-addr" }
 rand_chacha = "0.1"
@@ -14,6 +15,5 @@ getrandom = { version = "0.1.6", features = [ "stdweb" ] }
 clear_on_drop = { version = "0.2", features = ["no_cc"] }
 serde = { version = "1.0", features = ["derive"] }
 yew = { git = "https://github.com/DenisKolodin/yew", rev = "a33a89f0f185a157b4440ad82eef66daf5f98896" }
-btc-transaction-utils = "0.6.0"
 cryptoxide = "0.1.1"
 base64 = "0.10.1"

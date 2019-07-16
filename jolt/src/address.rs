@@ -7,7 +7,7 @@ use std::{fmt, str::FromStr};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Address(chain_addr::Address);
 
-pub const ADDRESS_PREFIX: &'static str = "ceo";
+pub const ADDRESS_PREFIX: &'static str = env!("ADDRESS_PREFIX");
 
 /* ---------------- Display ------------------------------------------------ */
 
