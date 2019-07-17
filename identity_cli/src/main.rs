@@ -33,7 +33,7 @@ fn main() {
             println!("address:    {}", addr);
         },
         None => {
-            panic!("Couldn't decrypt")
+            println!("Couldn't decrypt")
         },
     };
 }
