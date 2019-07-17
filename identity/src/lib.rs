@@ -12,9 +12,11 @@ use rand_chacha::ChaChaRng;
 use rand_core::SeedableRng as _;
 use getrandom::getrandom;
 
+const HREF: &str = "data:text/plain;charset=utf-8,";
+
 pub struct Model {
     password: String,
-    download_href: String,
+    href: String,
     completed: bool,
 }
 
@@ -30,7 +32,7 @@ impl Component for Model {
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
         Model {
             password: "".into(),
-            download_href: "data:text/plain;charset=utf-8,".into(),
+            href: HREF.into(),
             completed: false,
 
         }
@@ -42,8 +44,8 @@ impl Component for Model {
             }
             Msg::Generate => {
                 self.password = "".into();
+                self.href = HREF.into();
                 self.completed = false;
-                self.download_href = "data:text/plain;charset=utf-8,".into();
                 self.generate_keys();
             }
         }
@@ -63,6 +65,9 @@ impl Renderable<Model> for Model {
                     placeholder="Select a strong password">
                 </input>
                 <button onclick=|_| Msg::Generate>{ "Generate" }</button>
+                <p> { "This application's "}<a href="https://github.com/carbonideltd/jolt">{ "source code" }</a>{ " can be audited and/or run locally." }</p>
+                <p> { "To obtain your address you'll need to run a decryptor on your machine, obtained by the above link."} </p>
+
                 {
                     if self.completed == true {
                         html! {
@@ -70,7 +75,7 @@ impl Renderable<Model> for Model {
                                 <p></p>
                                 <p>{ "Your key pair is now generated, please download the encrypted file to a secure location." }</p>
                                 <p> { "Back up the file somewhere safe and ensure you do not lose the password." }</p>
-                                <a download="jolt.key" href=self.download_href.clone()>{"download your jolt keys"}</a>
+                                <a download="jolt.key" href=self.href.clone()>{"download your jolt keys"}</a>
                             </div>
                         }
                     } else {
@@ -97,7 +102,7 @@ impl Model {
         let cleartext = jolt_crypto::decrypt(self.password.clone(), digest.clone());
         match cleartext {
             Some(_) => {
-                self.download_href.push_str(&digest.clone().as_str());
+                self.href.push_str(&digest.clone().as_str());
                 self.completed = true;
             },
             None => {
