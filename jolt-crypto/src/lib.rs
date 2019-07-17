@@ -10,7 +10,7 @@ use std::{
     iter::repeat,
 };
 
-const PASSWORD_DERIVATION_ITERATIONS: u32 = 10_000;
+const PASSWORD_DERIVATION_ITERATIONS: u32 = 20_000;
 const SK_SIZE: usize = 69;
 const PK_SIZE: usize = 69;
 const SALT_SIZE: usize = 16;
@@ -19,7 +19,7 @@ const TAG_SIZE: usize = 16;
 const KEY_SIZE: usize = 32;
 const CLEARTEXT_SIZE: usize = 138;
 const CIPHERTEXT_SIZE: usize = CLEARTEXT_SIZE;
-const DIGEST_SIZE: usize = SALT_SIZE + NONCE_SIZE + TAG_SIZE + CIPHERTEXT_SIZE;
+const DIGEST_SIZE: usize = SALT_SIZE + NONCE_SIZE + CIPHERTEXT_SIZE + TAG_SIZE;
 
 pub type Password = [u8];
 type Key = [u8; KEY_SIZE];
