@@ -24,9 +24,9 @@ fn main() {
     let mut file = File::open(args[1].clone()).unwrap();
     let mut contents = String::new();
     file.read_to_string(&mut contents).unwrap();
-    let pk = jolt_crypto::decrypt(password.to_string(), contents);
-    match pk {
-        Some(pk) => {
+    let keys = jolt_crypto::decrypt(password.to_string(), contents);
+    match keys {
+        Some((_sk, pk)) => {
             println!("secret key: <not displayed for security reasons>\npublic key: {}", pk);
             let pk = PublicKey::<Ed25519>::try_from_bech32_str(&pk).unwrap();
             let addr = Address(chain_addr::Address(DISCRIMINATION, chain_addr::Kind::Single(pk)));

@@ -70,7 +70,7 @@ pub fn encrypt(password: String, cleartext: &String) -> String {
     base64::encode(&digest)
 }
 
-pub fn decrypt( password: String, digest : String) -> Option<String> {
+pub fn decrypt( password: String, digest : String) -> Option<(String, String)> {
     let digest = base64::decode(&digest).unwrap();
     let mut digest = &digest[..];
     let mut salt: Salt = [0; SALT_SIZE];
@@ -88,7 +88,9 @@ pub fn decrypt( password: String, digest : String) -> Option<String> {
         let mut cleartext = &cleartext[..];
         cleartext.read_exact(&mut sk[..]).unwrap();
         cleartext.read_exact(&mut pk[..]).unwrap();
-        Some(String::from_utf8(pk.to_vec()).unwrap())
+        let sk = String::from_utf8(sk.to_vec()).unwrap();
+        let pk = String::from_utf8(pk.to_vec()).unwrap();
+        Some((sk, pk))
     } else {
         None
     }
