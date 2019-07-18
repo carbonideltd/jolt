@@ -11,11 +11,15 @@ use chain_crypto::bech32::Bech32;
 use rand_chacha::ChaChaRng;
 use rand_core::SeedableRng as _;
 use getrandom::getrandom;
+use std::fmt;
 
+const DISCRIMINATION: chain_addr::Discrimination = chain_addr::Discrimination::Production;
+const ADDRESS_PREFIX: &str = "ceo";
 const HREF: &str = "data:text/plain;charset=utf-8,";
 
 pub struct Model {
     password: String,
+    address: String,
     href: String,
     completed: bool,
 }
@@ -32,6 +36,7 @@ impl Component for Model {
     fn create(_: Self::Properties, _: ComponentLink<Self>) -> Self {
         Model {
             password: "".into(),
+            address: "".into(),
             href: HREF.into(),
             completed: false,
 
@@ -64,20 +69,19 @@ impl Renderable<Model> for Model {
                     type="password"
                     value=&self.password
                     oninput=|e| Msg::GotPassword(e.value)
-                    placeholder="Select a strong passphrase">
+                    placeholder="A strong passphrase">
                 </input>
                 <button onclick=|_| Msg::Generate>{ "Generate" }</button>
                 <p> { "This application's "}<a href="https://github.com/carbonideltd/jolt">{ "source code" }</a>{ " can be audited and/or run locally." }</p>
-                <p> { "To obtain your address you'll need to run a decryptor on your machine, see above link."} </p>
-
                 {
                     if self.completed == true {
                         html! {
                             <div>
                                 <p></p>
-                                <p>{ "Your key pair is now generated, please download the encrypted file to a secure location." }</p>
-                                <p> { "Back up the file somewhere safe and ensure you do not lose the password." }</p>
-                                <a download="jolt.key" href=self.href.clone()>{"download your jolt keys"}</a>
+                                <p><b>{"Your address is: "}</b>{format!("{}", self.address) }</p>
+                                <p><b>{"Encrypted keypair:    "}</b><a download="jolt.key" href=self.href.clone()>{"Jolt keypair download"}</a></p>
+                                <p>{ "Your Jolt key pair is now generated, you must download the encrypted keypair file to a secure location." }</p>
+                                <p> { "Back up the file somewhere safe and ensure you do not lose the passphrase." }</p>
                             </div>
                         }
                     } else {
@@ -105,13 +109,25 @@ impl Model {
         let digest = jolt_crypto::encrypt(self.password.clone(), &crypto_material);
         let cleartext = jolt_crypto::decrypt(self.password.clone(), digest.clone());
         match cleartext {
-            Some(_) => {
+            Some((_sk, pk)) => {
+                let pk = PublicKey::<Ed25519>::try_from_bech32_str(&pk).unwrap();
+                let addr = Address(chain_addr::Address(DISCRIMINATION, chain_addr::Kind::Single(pk)));
                 self.href.push_str(&digest.clone().as_str());
                 self.completed = true;
+                self.address = addr.to_string();
             },
             None => {
                 panic!("Couldn't decrypt")
             },
         };
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Address(chain_addr::Address);
+
+impl fmt::Display for Address {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        chain_addr::AddressReadable::from_address(ADDRESS_PREFIX, &self.0).fmt(f)
     }
 }
