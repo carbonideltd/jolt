@@ -43,10 +43,12 @@ impl Component for Model {
                 self.password = new_value;
             }
             Msg::Generate => {
-                self.password = "".into();
-                self.href = HREF.into();
-                self.completed = false;
-                self.generate_keys();
+                if self.password.len() != 0 {
+                    self.href = HREF.into();
+                    self.completed = false;
+                    self.generate_keys();
+                    self.password = "".into();
+                }
             }
         }
         true
