@@ -64,11 +64,11 @@ impl Renderable<Model> for Model {
                     type="password"
                     value=&self.password
                     oninput=|e| Msg::GotPassword(e.value)
-                    placeholder="Select a strong password">
+                    placeholder="Select a strong passphrase">
                 </input>
                 <button onclick=|_| Msg::Generate>{ "Generate" }</button>
                 <p> { "This application's "}<a href="https://github.com/carbonideltd/jolt">{ "source code" }</a>{ " can be audited and/or run locally." }</p>
-                <p> { "To obtain your address you'll need to run a decryptor on your machine, obtained by the above link."} </p>
+                <p> { "To obtain your address you'll need to run a decryptor on your machine, see above link."} </p>
 
                 {
                     if self.completed == true {
@@ -84,6 +84,8 @@ impl Renderable<Model> for Model {
                         html! { <a type="hidden" />  }
                     }
                 }
+                <p></p>
+                <a href="https://xkcd.com/936/"><img src="https://imgs.xkcd.com/comics/password_strength.png"/></a>
             </div>
         }
     }
