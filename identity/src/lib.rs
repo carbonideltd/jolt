@@ -72,7 +72,7 @@ impl Renderable<Model> for Model {
                     placeholder="A strong passphrase">
                 </input>
                 <button onclick=|_| Msg::Generate>{ "Generate" }</button>
-                <p> { "This application's "}<a href="https://github.com/carbonideltd/jolt">{ "source code" }</a>{ " can be audited and/or run locally." }</p>
+                <p> { "This application's "}<a href="https://github.com/carbonideltd/jolt/tree/master/identity">{ "source code" }</a>{ " can be audited and/or run locally." }</p>
                 {
                     if self.completed == true {
                         html! {
@@ -80,8 +80,10 @@ impl Renderable<Model> for Model {
                                 <p></p>
                                 <p><b>{"Your address is: "}</b>{format!("{}", self.address) }</p>
                                 <p><b>{"Encrypted keypair:    "}</b><a download="jolt.key" href=self.href.clone()>{"Jolt keypair download"}</a></p>
-                                <p>{ "Your Jolt key pair is now generated, you must download the encrypted keypair file to a secure location." }</p>
+                                <p>{ "Your Jolt key pair is now generated and is associated with the address, you must download the encrypted keypair file to a secure location." }</p>
                                 <p> { "Back up the file somewhere safe and ensure you do not lose the passphrase." }</p>
+                                <p> { "You may run the "} <a href="https://github.com/carbonideltd/jolt/tree/master/identity_cli">{ "decryptor program" }</a> {" locally to ensure the file wasn't corrupted when it downloaded." }</p>
+                                <p> { "The decryptor program will also print the address if needed later." }</p>
                             </div>
                         }
                     } else {
@@ -89,6 +91,7 @@ impl Renderable<Model> for Model {
                     }
                 }
                 <p></p>
+                <p>{"How to select a secure passphrase:"}</p>
                 <a href="https://xkcd.com/936/"><img src="https://imgs.xkcd.com/comics/password_strength.png"/></a>
             </div>
         }
