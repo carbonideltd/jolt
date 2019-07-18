@@ -78,7 +78,7 @@ impl Renderable<Model> for Model {
                         html! {
                             <div>
                                 <p></p>
-                                <p><b>{"Your address is: "}</b>{format!("{}", self.address) }</p>
+                                <p><b>{"Your Luceo production address is: "}</b>{format!("{}", self.address) }</p>
                                 <p><b>{"Encrypted keypair:    "}</b><a download="jolt.key" href=self.href.clone()>{"Jolt keypair download"}</a></p>
                                 <p>{ "Your Jolt key pair is now generated and is associated with the address, you must download the encrypted keypair file to a secure location." }</p>
                                 <p> { "Back up the file somewhere safe and ensure you do not lose the passphrase." }</p>
