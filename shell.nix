@@ -8,5 +8,4 @@ stdenv.mkDerivation {
   name = "jolt";
   src = null;
   buildInputs = [ rustup pkgconfig openssl cargo-web ];
-
 }
