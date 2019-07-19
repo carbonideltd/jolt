@@ -6,14 +6,14 @@ use strum_macros::{Display, EnumIter, EnumString};
 use yew::{html, App, Component, ComponentLink, Html, Renderable, ShouldRender};
 use yew::components::Select;
 use faucet::Model as Faucet;
-use jolt::Model as Jolt;
+//use jolt::Model as Jolt;
 use identity::Model as Identity;
 
 
 #[derive(Clone, Debug, Display, EnumString, EnumIter, PartialEq)]
 enum Scene {
     Faucet,
-    Jolt,
+//    Jolt,
     Identity,
 }
 
@@ -69,7 +69,7 @@ impl Model {
         if let Some(scene) = self.scene.as_ref() {
             match scene {
                 Scene::Faucet => html! { <Faucet /> },
-                Scene::Jolt => html! { <Jolt /> },
+    //            Scene::Jolt => html! { <Jolt /> },
                 Scene::Identity => html! { <Identity /> },
             }
         } else {
