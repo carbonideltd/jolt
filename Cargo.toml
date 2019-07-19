@@ -1,0 +1,10 @@
+[workspace]
+members = [
+  "console",
+  "faucet",
+  "identity",
+]
+
+exclude = [
+    "chain-libs",
+]
