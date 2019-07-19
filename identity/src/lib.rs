@@ -92,6 +92,7 @@ impl Renderable<Model> for Model {
                 }
                 <p></p>
                 <p>{"How to select a secure passphrase:"}</p>
+                <p><a href="https://raw.githubusercontent.com/stevenliuyi/xkcd-cn/master/pics/936_password_strength_cn.png">{"中文"}</a></p>
                 <a href="https://xkcd.com/936/"><img src="https://imgs.xkcd.com/comics/password_strength.png"/></a>
             </div>
         }
