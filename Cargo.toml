@@ -3,6 +3,7 @@ members = [
   "console",
   "faucet",
   "identity",
+  "identity_cli",
 ]
 
 exclude = [
